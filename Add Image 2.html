@@ -46,8 +46,9 @@
     // add the plane to the scene
     scene.add(cube);*/
 
-		//create a cube with round edges
+		//create a cuboid with round edges - https://discourse.threejs.org/t/round-edged-box/1402
 		function createBoxWithRoundedEdges( width, height, depth, radius0, smoothness ) {
+
   		let shape = new THREE.Shape();
   		let eps = 0.00001;
   		let radius = radius0 - eps;
@@ -69,9 +70,16 @@
 
   		return geometry;
 		}
-		var cubeMaterial = new THREE.MeshNormalMaterial();
+
+		//add a normal material ver rounded cuboid
+		//var cubeMaterial = new THREE.MeshNormalMaterial({ wireframe: true });
+
+		//add an image as a material over rounded cuboid
+		var texture = new THREE.TextureLoader().load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
+    var cubeMaterial = new THREE.MeshLambertMaterial( { map: texture } );
+
 		var cube = new THREE.Mesh( createBoxWithRoundedEdges( 3.8, 1.5, 1.7, 4.6 / 9, 16 ), cubeMaterial );
-  	cube.scale.setScalar( 1.25 );
+  	//cube.scale.setScalar( 1.25 ); //This increases the scale of the entire object 1.25 times
   	scene.add( cube );
 
     render();
