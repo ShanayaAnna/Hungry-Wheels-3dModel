@@ -37,17 +37,16 @@
     light.position.setScalar(10);
     scene.add(light);
 
-    var planeGeometry = new THREE.PlaneGeometry(10, 15, 1, 1);
+		var cubeGeometry = new THREE.BoxGeometry(3,3,3);
     var texture = new THREE.TextureLoader().load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
-    var planeMaterial = new THREE.MeshLambertMaterial( { map: texture } );
-    //var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
-    var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    plane.receiveShadow = true;
+    var cubeMaterial = new THREE.MeshLambertMaterial( { map: texture } );
+    var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    cube.castShadow = true;
     // rotate and position the plane
-    plane.rotation.x = -0.5 * Math.PI;
-    plane.position.set(0,-1,0);
+    cube.rotation.x = -0.5 * Math.PI;
+    cube.position.set(0,-1,0);
     // add the plane to the scene
-    scene.add(plane);
+    scene.add(cube);
 
     render();
 
