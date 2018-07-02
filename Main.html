@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0;
+						 background-color: lightblue; }
+			canvas { width: 100%; height: 100% }
+			#container canvas{ position: absolute; left: 0; top: 0; width: 100%; height: 100%; bottom: 0;}
+
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+
+		<script src="/home/shanayaanna/js/three.js"></script>
+		<script src="/home/shanayaanna/js/OrbitControls.js"></script>
+		<script src="/home/shanayaanna/js/THREE.DecalGeometry.js"></script>
+		<script src="/home/shanayaanna/js/DecalGeometry.js"></script>
+		<script src="/home/shanayaanna/js/dat.gui.min.js"></script>
+
+
+		<script>
+
+		/*var container = document.getElementById( 'container' );
+
+		//create a texture
+		texture = new THREE.TextureLoader().load( "/home/shanayaanna/Pictures/checkered.png" );*/
+
+			// scene
+			var scene = new THREE.Scene();
+
+
+			//camera
+      var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+
+			//renderer
+      var renderer = new THREE.WebGLRenderer( { alpha: true } );
+			renderer.setClearColor( 0x000000, 0 );
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
+
+
+			//lighting
+			var light = new THREE.PointLight(0xffffff);
+			light.position.set(-100,200,100);
+			scene.add(light);
+			light.castShadow = true;
+
+			var light2 = new THREE.PointLight(0xffffdd);
+    	light2.position.set(100,-2000,-100);
+    	scene.add(light2);
+			light2.castShadow = true;
+
+			/*create a plane ground
+			var planeGeometry = new THREE.PlaneGeometry(60, 20);
+			var planeMaterial = new THREE.MeshLambertMaterial( {color: lightblue} );
+			var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+			plane.receiveShadow = true;
+			//rotate and position the plane
+			plane.rotation.x = -0.5 * Math.PI;
+			plane.position.set(15,0,0);
+			//add the plane to the Scene
+			scene.add(plane);*/
+
+
+			//cube geometry
+			var geometry = new THREE.BoxGeometry( 4, 1, 1.25 );
+      var material = new THREE.MeshNormalMaterial({transparent: true, opacity:0.75 });
+			//var material = new THREE.MeshBasicMaterial( { map: texture} );
+			/*sphere geometry
+			var geometry = new THREE.SphereGeometry(1, 25, 25, 0, Math.PI * 2, 0, Math.PI * 2);
+			var material1 = new THREE.MeshNormalMaterial({transparent: true, opacity:0.75 });
+			var material = material1*/
+			var cube = new THREE.Mesh(geometry, material);
+			scene.add(cube);
+			cube.castShadow = true;
+
+
+			camera.position.z = 5;
+
+
+			//controls
+			var controls = new THREE.OrbitControls(camera, renderer.domElement);
+			controls.enableDamping = true;
+			controls.dampingFactor = 0.25;
+			controls.enableZoom = true;
+
+
+			/*function animate() {
+					requestAnimationFrame( animate );
+					cube.rotation.x += 0.01;
+					cube.rotation.y += 0.01;
+
+					controls.update();
+
+					renderer.render( scene, camera );
+      }
+
+
+			animate();*/
+			var render = function () {
+				requestAnimationFrame( render );
+
+				//cube.rotation.x += 0.01;
+				//cube.rotation.y += 0.01;
+				controls.update();
+				renderer.render(scene, camera);
+			};
+			render();
+
+		</script>
+
+		<button id="Btn-CM">Change Material</button>
+		<button id="Btn-AM">Add Mesh</button>
+		<script>
+				var x = document.getElementById("Btn-CM");
+				x.addEventListener("click", function() {
+						scene.overrideMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, transparent:0.5});
+				});
+				var y = document.getElementById("Btn-AM");
+				y.addEventListener("click", function() {
+					var cube = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true  }));
+					scene.add(cube)
+				});
+
+		</script>
+	</body>
+</html>
