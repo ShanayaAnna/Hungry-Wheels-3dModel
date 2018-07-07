@@ -119,7 +119,7 @@
         //var cubeGeometry = new THREE.BoxGeometry(10 * Math.random(), 10 * Math.random(), 10 * Math.random());
         var cubeMaterial = new THREE.MeshBasicMaterial();
         cubeMaterial.map = THREE.ImageUtils.loadTexture("../assets/textures/debug.png");
-        var cube = new THREE.Mesh( createBoxWithRoundedEdges( 3.8, 1.5, 1.7, 4.6 / 9, 16 ), cubeMaterial );
+        var cube = new THREE.Mesh( createBoxWithRoundedEdges( 3.8, 1.5, 1.5, 4.6 / 9, 16 ), cubeMaterial );
         cube.name = 'cube';
         scene.add(cube);
 
