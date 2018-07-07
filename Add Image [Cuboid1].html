@@ -5,20 +5,17 @@
 		<title>Exploring images</title>
 		<style>
 			body { margin: 0;
-						 background-color: lightblue; }
+						 background-color: black; }
 			canvas { width: 100%; height: 100% }
-			#container canvas{ position: absolute; left: 0; top: 0; width: 100%; height: 100%; bottom: 0;}
 
 		</style>
 	</head>
 	<body>
-		<div id="container"></div>
 
 		<script src="/home/shanayaanna/js/three.js"></script>
 		<script src="/home/shanayaanna/js/OrbitControls.js"></script>
-		<script src="/home/shanayaanna/js/THREE.DecalGeometry.js"></script>
-		<script src="/home/shanayaanna/js/DecalGeometry.js"></script>
 		<script src="/home/shanayaanna/js/dat.gui.min.js"></script>
+		<script src="/home/shanayaanna/Hungry-Wheels-3dModel/Rounded Edge Cuboid2.js"></script>
 
 
 		<script>
@@ -29,13 +26,26 @@
       antialias: true
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x101010);
+    renderer.setClearColor( 0x000000, 0 );
     document.body.appendChild(renderer.domElement);
 
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
-    var light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.setScalar(10);
-    scene.add(light);
+
+		//lighting
+		var light = new THREE.DirectionalLight(0xffffff);
+		light.position.set(-100,0,100);
+		scene.add(light);
+		light.castShadow = true;
+
+		var light2 = new THREE.DirectionalLight(0xffffff);
+		light2.position.set(100,-100,0);
+		scene.add(light2);
+		light2.castShadow = true;
+
+		var light3 = new THREE.DirectionalLight(0xFFFFDD);
+		light3.position.set(0,100,-100);
+		scene.add(light3);
+		light3.castShadow = true;
 
 		/*//create a cube
 		var cubeGeometry = new THREE.BoxGeometry(3,3,3);
@@ -46,37 +56,25 @@
     // add the plane to the scene
     scene.add(cube);*/
 
-		//create a cuboid with round edges - https://discourse.threejs.org/t/round-edged-box/1402
-		function createBoxWithRoundedEdges( width, height, depth, radius0, smoothness ) {
+		//Material Type 1: Add a normal material ver rounded cuboid
+		var cubeMaterial = new THREE.MeshNormalMaterial({wireframe: true}); //new THREE.MeshStandardMaterial({metalness: 0.25, roughness: 0.5});
 
-  		let shape = new THREE.Shape();
-  		let eps = 0.00001;
-  		let radius = radius0 - eps;
-  		shape.absarc( eps, eps, eps, -Math.PI / 2, -Math.PI, true );
-  		shape.absarc( eps, height -  radius * 2, eps, Math.PI, Math.PI / 2, true );
-  		shape.absarc( width - radius * 2, height -  radius * 2, eps, Math.PI / 2, 0, true );
-  		shape.absarc( width - radius * 2, eps, eps, 0, -Math.PI / 2, true );
-  		let geometry = new THREE.ExtrudeBufferGeometry( shape, {
-    		amount: depth - radius0 * 2,
-    		bevelEnabled: true,
-    		bevelSegments: smoothness * 2,
-    		steps: 1,
-    		bevelSize: radius,
-    		bevelThickness: radius0,
-    		curveSegments: smoothness
-  		});
+		//Material Type 2: Add an image as a material over rounded cuboid
+		//var texture = new THREE.TextureLoader().load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
+    //var cubeMaterial = new THREE.MeshLambertMaterial( { map: texture } ); //map a single image onto the cuboid. Note: Only 3 faces get covered by an image and image is distorted
 
-  		geometry.center();
-
-  		return geometry;
-		}
-
-		//add a normal material ver rounded cuboid
-		//var cubeMaterial = new THREE.MeshNormalMaterial({ wireframe: true });
-
-		//add an image as a material over rounded cuboid
-		var texture = new THREE.TextureLoader().load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
-    var cubeMaterial = new THREE.MeshLambertMaterial( { map: texture } );
+		/*//Material Type 3: Add an image separately to each face of the cuboid
+		var textureLoader = new THREE.TextureLoader();
+		var texture = textureLoader.load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
+		var materials = [
+    	new THREE.MeshBasicMaterial( { map: texture } ),
+    	new THREE.MeshBasicMaterial( { map: texture } ),
+    	new THREE.MeshBasicMaterial( { map: texture } ),
+    	new THREE.MeshBasicMaterial( { map: texture } ),
+    	new THREE.MeshBasicMaterial( { map: texture } ),
+    	new THREE.MeshBasicMaterial( { map: texture } )
+		];
+		var cubeMaterial = new THREE.MeshFaceMaterial( materials );*/
 
 		var cube = new THREE.Mesh( createBoxWithRoundedEdges( 3.8, 1.5, 1.7, 4.6 / 9, 16 ), cubeMaterial );
   	//cube.scale.setScalar( 1.25 ); //This increases the scale of the entire object 1.25 times
@@ -89,6 +87,21 @@
       requestAnimationFrame(render);
       renderer.render(scene, camera);
   }
+</script>
+<button id="Btn-AD">Add Decal</button>
+<script>
+		var x = document.getElementById("Btn-AD");
+		x.addEventListener("click", function() {
+			//Material Type 3: Add an image separately to each face of the cuboid
+			var textureLoader = new THREE.TextureLoader();
+			var texture = textureLoader.load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
+			var materials = new THREE.MeshBasicMaterial( { map: texture } );
+			var cubeMaterial = new THREE.MeshFaceMaterial( materials );
+
+			//scene.overrideMaterial = cubeMaterial;
+			var cube = new THREE.Mesh( createBoxWithRoundedEdges( 3.8, 1.5, 1.7, 4.6 / 9, 16 ), (scene.overrideMaterial = cubeMaterial) );
+			scene.add(cube);
+		});
 </script>
 </body>
 </html>
