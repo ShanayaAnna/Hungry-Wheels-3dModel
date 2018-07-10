@@ -73,24 +73,39 @@
                 materials.materials.default.map.magFilter = THREE.NearestFilter;
                 materials.materials.default.map.minFilter = THREE.LinearFilter;
 
-                var objLoader = new THREE.OBJLoader();
+
+                var loadingManager = new THREE.LoadingManager();
+                var objLoader = new THREE.OBJLoader(loadingManager);
+                var textureLoader =  new THREE.TextureLoader(loadingManager);
                 objLoader.setMaterials(materials);
                 objLoader.setPath('assets/');
                 objLoader.load('female-croupier-2013-03-26.obj', function (object) {
 
                     scene.add(object);
+                    /*//Add a mesh in the onload call of objLoader.load
                     object.traverse( function ( child ) {
+                      if ( child.geometry !== undefined ) {
+                          console.log( child.geometry.vertices );
+                        }
       	               if ( child.isMesh ) {
       		               var wireframeGeomtry = new THREE.WireframeGeometry( child.geometry );
       		                 var wireframeMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
       		                   var wireframe = new THREE.LineSegments( wireframeGeomtry, wireframeMaterial );
       		                     child.add(wireframe);
                      }
-                   });
+                   });*/
+                    //Add a material
+                    var objmaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg')});
+                    object.traverse( function ( child ) {
+                        if ( child.isMesh ) {
+                          child.material = objmaterial;
+                          child.material.needsUpdate = true;
+                        }
 
+                    });
+
+                  });
                 });
-
-            });
 
 
 
@@ -153,13 +168,9 @@
         }
 
         function animate() {
-
             requestAnimationFrame(animate);
-
             controls.update();
-
             render();
-
         }
 
         function render() {
@@ -168,6 +179,36 @@
 
         }
 
+    </script>
+    <button id="Btn-AD">Add Decal</button>
+    <script>
+       var x = document.getElementById("Btn-AD");
+       x.addEventListener("click", function() {
+         var objLoader = new THREE.OBJLoader();
+         objLoader.setMaterials(materials);
+         objLoader.setPath('assets/');
+         objLoader.load('female-croupier-2013-03-26.obj', function (object) {
+
+             scene.add(object);
+             object.traverse( function ( child ) {
+                if ( child.isMesh ) {
+                  var wireframeGeomtry = new THREE.WireframeGeometry( child.geometry );
+                    var wireframeMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
+                      var wireframe = new THREE.LineSegments( wireframeGeomtry, wireframeMaterial );
+                        child.add(wireframe);
+              }
+            });
+
+         });
+         /*var textureLoader = new THREE.TextureLoader();
+         var texture = textureLoader.load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
+         var materials = new THREE.MeshBasicMaterial( { map: texture } );
+         var cubeMaterial = new THREE.MeshFaceMaterial( materials );
+
+         var box = new THREE.Mesh(RoundEdgedBox(3.8, 1.5, 1.5, .5, 3, 2, 1, 6), ( scene.overrideMaterial = cubeMaterial ));
+
+         scene.add(box);*/
+      });
     </script>
 
 </body>
