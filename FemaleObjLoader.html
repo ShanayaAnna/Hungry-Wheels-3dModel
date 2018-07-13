@@ -7,10 +7,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="three.js"></script>
-    <script src="OrbitControls.js"></script>
-    <script src="OBJLoader.js"></script>
-    <script src="MTLLoader.js"></script>
+    <script src="/js/three.js"></script>
+    <script src="/js/OrbitControls.js"></script>
+    <script src="/js/OBJLoader.js"></script>
+    <script src="/js/MTLLoader.js"></script>
 
     <style>
         body {
@@ -94,19 +94,46 @@
       		                     child.add(wireframe);
                      }
                    });*/
-                    //Add a material
-                    var objmaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg')});
+
+                   /*//bones
+                   for ( var i = 0; i < child.geometry.vertices.length; i ++ ) {
+
+					                var vertex = child.geometry.vertices[ i ];
+					                var y = ( vertex.y );
+
+					                var skinIndex = Math.floor( y  );
+					                var skinWeight = ( y % ) / sizing.segmentHeight;
+
+					                child.geometry.skinIndices.push( new THREE.Vector4( skinIndex, skinIndex + 1, 0, 0 ) );
+					                child.geometry.skinWeights.push( new THREE.Vector4( 1 - skinWeight, skinWeight, 0, 0 ) );
+
+				            }
+                    return geometry;*/
+
+                    /*//Add a material
+                    var objmaterial = new THREE.MeshLambertMaterial({map: textureLoader.load('https://raw.githubusercontent.com/ShanayaAnna/Hungry-Wheels-3dModel/master/Assets/wood%20texture.jpeg')});
                     object.traverse( function ( child ) {
                         if ( child.isMesh ) {
                           child.material = objmaterial;
                           child.material.needsUpdate = true;
                         }
 
-                    });
+                    });*/
 
                   });
                 });
-
+                /*//Add a mesh in the onload call of objLoader.load
+                object.traverse( function ( child ) {
+                  if ( child.geometry !== undefined ) {
+                      console.log( child.geometry.vertices );
+                    }
+                   if ( child.isMesh ) {
+                     var wireframeGeomtry = new THREE.WireframeGeometry( child.geometry );
+                       var wireframeMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
+                         var wireframe = new THREE.LineSegments( wireframeGeomtry, wireframeMaterial );
+                           child.add(wireframe);
+                 }
+               });
 
 
             /* Renderer */
