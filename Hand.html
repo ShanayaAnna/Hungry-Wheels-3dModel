@@ -73,6 +73,8 @@
               polygonOffset: true,
               polygonOffsetFactor: 1, // positive value pushes polygon further away
               polygonOffsetUnits: 1});
+	    //var material2 = new THREE.MeshNormalMaterial({color: 0xffffff, wireframe: true}); // Experimenting with putting two materials in an array
+	    //var mat = [material1, material2]; //To make a movable mesh 
             mesh = new THREE.SkinnedMesh(geometry, mat);
 
             // rotate the complete hand
@@ -82,10 +84,15 @@
             // add the mesh
             scene.add(mesh);
 
+  	    //wireframe
+	    var wireframeGeomtry = new THREE.WireframeGeometry( mesh.geometry );
+            var wireframeMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
+            var wireframe = new THREE.LineSegments( wireframeGeomtry, wireframeMaterial );
+            mesh.add(wireframe);
+
             // and start the animation
             tween.start();
-
-            return geometry;
+	    
         });
 
 
@@ -94,16 +101,16 @@
 
         var onUpdate = function () {
 
-          //mesh
-          var meshGeometry = mesh.skeleton.bones;
-          var wireframeGeomtry = new THREE.WireframeGeometry( mesh.geometry );
-          var wireframeMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
-          var wireframe = new THREE.LineSegments( wireframeGeomtry, wireframeMaterial );
-          mesh.add(wireframe);
+	    mesh.geometry.verticesNeedUpdate = true;
+
+	    //helper
+	    helper = new THREE.SkeletonHelper(mesh);
+            helper.visible = false;
+            scene.add(helper);
 
             var pos = this.pos;
             // rotate the fingers
-            mesh.skeleton.bones[5].rotation.set(0, 0, pos);
+            mesh.skeleton.bones[5].rotation.set(0, 0, -1);
             mesh.skeleton.bones[6].rotation.set(0, 0, pos);
             mesh.skeleton.bones[10].rotation.set(0, 0, pos);
             mesh.skeleton.bones[11].rotation.set(0, 0, pos);
@@ -124,15 +131,20 @@
                 .onUpdate(onUpdate);
 
         render();
+
+
         function render() {
+	    loader.update();
             stats.update();
             TWEEN.update();
             var delta = clock.getDelta();
-            controls.update();
+            controls.update(delta);
             // render using requestAnimationFrame
             requestAnimationFrame(render);
             webGLRenderer.render(scene, camera);
         }
+
+
         function initStats() {
             var stats = new Stats();
             stats.setMode(0); // 0: fps, 1: ms

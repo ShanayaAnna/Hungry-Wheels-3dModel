@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hand Animation</title>
+    <script src="/js/three.js"></script>
+    <script src="/js/dat.gui.min.js"></script>
+    <script src="/js/OrbitControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<script>
+
+    // global variables
+    var renderer;
+    var scene;
+    var camera;
+
+    var control;
+    var orbit;
+    var giraffe;
+    var helper;
+
+    function init() {
+
+        // create a scene, that will hold all our elements such as objects, cameras and lights.
+        scene = new THREE.Scene();
+
+        // create a camera, which defines where we're looking at.
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // create a render, sets the background color and the size
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0x000000, 1.0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // position and point the camera to the center of the scene
+        camera.position.set(22,22,22); 
+        camera.lookAt(scene.position);
+
+
+        // add the output of the renderer to the html element
+        document.body.appendChild(renderer.domElement);
+        orbit = new THREE.OrbitControls(camera, renderer.domElement);
+
+
+        var dirLight = new THREE.DirectionalLight();
+        dirLight.position.set(15, 10, -5);
+        scene.add(dirLight);
+
+        var dirLight2 = new THREE.DirectionalLight();
+        dirLight2.position.set(-15, 10, -5);
+        scene.add(dirLight2);
+
+        var spotLight = new THREE.SpotLight();
+        spotLight.position.set(40, 40, 40);
+        scene.add(spotLight);
+
+
+        control = new function () {
+            this.finger1a_rot = 0.01;
+            this.finger1b_rot = 0.01;
+
+            this.finger2a_rot = 0.01;
+            this.finger2b_rot = 0.01;
+
+            this.finger3a_rot = 0.01;
+            this.finger3b_rot = 0.01;
+
+            this.finger4a_rot = 0.01;
+            this.finger4b_rot = 0.01;
+
+	    this.wrist_sideways_rot = 0.01;
+	    this.wrist_updown_rot = 0.01;
+
+        };
+        addControls(control);
+
+        var loader = new THREE.JSONLoader();
+        loader.load('hand-1.js', function (geometry, mat) {
+            var mat = new THREE.MeshLambertMaterial({color: 0xF0C8C9,skinning: true});
+	    
+            mesh = new THREE.SkinnedMesh(geometry, mat);
+
+
+            // rotate the complete hand
+            mesh.rotation.y = -0.5 * Math.PI;
+            mesh.rotation.z = 0.5 * Math.PI;
+
+            // add the mesh
+            scene.add(mesh);
+	    mesh.scale.set(7,7,7);
+
+            // set defaults for control object
+            control.finger1a_rot = mesh.skeleton.bones[5].rotation.z;
+            control.finger1b_rot = mesh.skeleton.bones[6].rotation.z;
+            
+	    control.finger2a_rot = mesh.skeleton.bones[10].rotation.z;
+            control.finger2b_rot = mesh.skeleton.bones[11].rotation.z;
+
+	    control.finger3a_rot = mesh.skeleton.bones[15].rotation.z;
+            control.finger3b_rot = mesh.skeleton.bones[16].rotation.z;
+            
+	    control.finger4a_rot = mesh.skeleton.bones[20].rotation.z;
+            control.finger4b_rot = mesh.skeleton.bones[21].rotation.z;
+
+	    control.wrist_sideways_rot = mesh.skeleton.bones[1].rotation.x;
+	    control.wrist_updown_rot = mesh.skeleton.bones[1].rotation.z;
+
+            helper = new THREE.SkeletonHelper(mesh);
+            helper.visible = false;
+            scene.add(helper);
+
+            render()
+        });
+
+    }
+
+    function addControls(controlObject) {
+        var gui = new dat.GUI();
+        gui.add(controlObject, 'finger1a_rot', -1.75, 0).listen();
+        gui.add(controlObject, 'finger1b_rot', -1.75, 0).listen();
+
+        gui.add(controlObject, 'finger2a_rot', -1.75, 0).listen();
+        gui.add(controlObject, 'finger2b_rot', -1.75, 0).listen();
+
+        gui.add(controlObject, 'finger3a_rot', -1.75, 0).listen();
+        gui.add(controlObject, 'finger3b_rot', -1.75, 0).listen();
+
+        gui.add(controlObject, 'finger4a_rot', -1.75, 0).listen();
+        gui.add(controlObject, 'finger4b_rot', -1.75, 0).listen();
+
+	gui.add(controlObject, 'wrist_sideways_rot', -1.5,1.5).listen();
+	gui.add(controlObject, 'wrist_updown_rot', -1.75, 0).listen();
+
+
+
+        gui.add({helper: false}, 'helper').onChange(function (e) {
+            helper.visible = e
+        });
+    }
+
+    function render() {
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+
+        // the neck bone
+        mesh.skeleton.bones[5].rotation.z = control.finger1a_rot;
+        mesh.skeleton.bones[6].rotation.z = control.finger1b_rot;
+	mesh.skeleton.bones[10].rotation.z = control.finger2a_rot;
+        mesh.skeleton.bones[11].rotation.z = control.finger2b_rot;
+	mesh.skeleton.bones[20].rotation.z = control.finger3a_rot;
+        mesh.skeleton.bones[21].rotation.z = control.finger3b_rot;
+	mesh.skeleton.bones[1].rotation.x = control.wrist_sideways_rot;
+	mesh.skeleton.bones[1].rotation.z = control.wrist_updown_rot;
+
+
+        helper.update();
+        orbit.update();
+    }
+
+    // calls the init function when the window is done loading.
+    window.onload = init;
+
+</script>
+<body>
+</body>
