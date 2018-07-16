@@ -17,7 +17,7 @@
       <script src="https://threejs.org/build/three.min.js"></script>
       <script src="https://threejs.org/examples/js/utils/SceneUtils.js"></script>
       <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-			<script src="/home/shanayaanna/Hungry-Wheels-3dModel/Rounded Edge Cuboid3.js"></script>
+      <script src="/home/shanayaanna/Hungry-Wheels-3dModel/Rounded Edge Cuboid3.js"></script>
 			<script>
 			var scene = new THREE.Scene();
 			var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
@@ -48,13 +48,61 @@
 			light3.castShadow = true;
 
 			var textureLoader = new THREE.TextureLoader();
-			var texture = textureLoader.load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
-			var materials = new THREE.MeshBasicMaterial( { map: texture } );
-			var cubeMaterial = new THREE.MeshFaceMaterial( materials );
+			//Tyre			
+			var geometry = new THREE.CylinderGeometry( 0.28, 0.28, 0.25, 18,5 );
 
+			var sphereColor = new THREE.MeshPhongMaterial({color: 0x888888});
+			var texture1 = textureLoader.load( 'https://raw.githubusercontent.com/ShanayaAnna/Hungry-Wheels-3dModel/master/Assets/tyre1.png' );
+			var sphereMaterial = new THREE.MeshPhongMaterial( { map: texture1 } );
 
-			var box = new THREE.Mesh(RoundEdgedBox(3.8, 1.5, 1.5, .5, 3, 2, 1, 6), new THREE.MeshNormalMaterial({wireframe:true}));//new THREE.MeshNormalMaterial({wireframe:true})
+			/*sphereMaterials = [
+    				new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'textures/faceside.png' ), overdraw: true } ),
+    				new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'textures/capside.png' ), overdraw: true } )                  
+			];*/
+
+			/*var materialsArray = [];
+			materialsArray.push(sphereColor); //materialindex = 0
+			materialsArray.push(sphereSideMaterial); // materialindex = 1
+			materialsArray.push(sphereColor); // materialindex = 2
+			var sphereMaterial = new THREE.MeshFaceMaterial(materialsArray);*/
+			
+			var aFaces = geometry.faces.length;
+			console.log(aFaces);
+
+			//for(var i=0;i<aFaces;i++) {geometry.faces[i].materialindex;}
+			var wheel1 = new THREE.Mesh(geometry, sphereMaterial);
+			scene.add(wheel1);
+			wheel1.position.x = -0.95;
+			wheel1.position.y = -0.82;
+			wheel1.position.z = -0.45;
+			wheel1.rotation.x = -0.5*Math.PI;
+
+			var wheel2 = new THREE.Mesh(geometry, sphereMaterial);
+			scene.add(wheel2);
+			wheel2.position.x = -0.95;
+			wheel2.position.y = -0.82;
+			wheel2.position.z = 0.45;
+			wheel2.rotation.x = -0.5*Math.PI;
+
+			var wheel3 = new THREE.Mesh(geometry, sphereMaterial);
+			scene.add(wheel3);
+			wheel3.position.x = 0.95;
+			wheel3.position.y = -0.82;
+			wheel3.position.z = -0.45;
+			wheel3.rotation.x = -0.5*Math.PI;
+
+			var wheel4 = new THREE.Mesh(geometry, sphereMaterial);
+			scene.add(wheel4);
+			wheel4.position.x = 0.95;
+			wheel4.position.y = -0.82;
+			wheel4.position.z = 0.45;
+			wheel4.rotation.x = -0.5*Math.PI;
+
+			//wheel.position.setFromMatrixPosition( box.matrixWorld );
+
+			var box = new THREE.Mesh(RoundEdgedBox(3.8, 1.5, 1.5, .5, 3, 2, 1, 6), new THREE.MeshNormalMaterial({wireframe:true, transparent: true, opacity: 0.0001}));//new THREE.MeshNormalMaterial({wireframe:true})
 			scene.add(box);
+			//box.rotation.x = -0.72*Math.PI;
 
 			/*var l = box.RoundEdgedBox.parameters.width;
 
@@ -90,13 +138,13 @@
 
 					 var box = new THREE.Mesh( RoundEdgedBox(3.8, 1.5, 1.7, .25, 3, 2, 1, 6), materials );
 					 scene.add(box);*/
-					 var textureLoader = new THREE.TextureLoader();
-		 			var texture = textureLoader.load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
+					var textureLoader = new THREE.TextureLoader();
+		 			var texture = textureLoader.load( 'https://raw.githubusercontent.com/ShanayaAnna/Hungry-Wheels-3dModel/master/Assets/11_burger_king_300.jpg' );
 		 			var materials = new THREE.MeshBasicMaterial( { map: texture } );
 		 			var cubeMaterial = new THREE.MeshFaceMaterial( materials );
 
 
-		 			var box = new THREE.Mesh(RoundEdgedBox(3.8, 1.5, 1.5, .5, 3, 2, 1, 6), ( scene.overrideMaterial = cubeMaterial ));
+		 			var box = new THREE.Mesh(RoundEdgedBox(3.8, 1.5, 1.5, .5, 3, 2, 1, 6),  cubeMaterial );
 		 			scene.add(box);
 				 });
 			</script>
