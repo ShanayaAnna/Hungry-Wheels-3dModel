@@ -9,7 +9,7 @@
         body {
             margin: 0;
             overflow: hidden;
-	    color: 0x8b8dd6;
+	    background-color: 0xd69c8b;
         }
     </style>
 </head>
@@ -74,18 +74,12 @@
         var loader = new THREE.JSONLoader();
         loader.load('hand-1.js', function (geometry, mat) {
 	    // create the hand 
-            mat = new THREE.MeshLambertMaterial({color: 0xF0C8C9,skinning: true});
+            mat = new THREE.MeshLambertMaterial({color: 0xF0C8C9,skinning: true, needsUpdate: true});
             mesh = new THREE.SkinnedMesh(geometry, mat);
-
-	    //create the mesh wireframe overlapping the hand 
-            mat1 = new THREE.MeshNormalMaterial({skinning: true, wireframe: true});
-            mesh1 = new THREE.SkinnedMesh(geometry, mat1);
 
             // rotate the complete hand
             mesh.rotation.y = -0.5 * Math.PI;
             mesh.rotation.z = 0.5 * Math.PI;
-	    mesh1.rotation.y = -0.5 * Math.PI;
-            mesh1.rotation.z = 0.5 * Math.PI;
 
 	    //wireframe
 	    var wireframeGeomtry = new THREE.WireframeGeometry( mesh.geometry );
@@ -97,8 +91,6 @@
             // add the mesh
             scene.add(mesh);
 	    mesh.scale.set(0.9,0.9,0.9);
-	    scene.add(mesh1);
-	    mesh1.scale.set(0.9,0.9,0.9);
 
             // set defaults for control object
             control.finger1a_rot = mesh.skeleton.bones[6].rotation.z;
@@ -119,30 +111,6 @@
 
 	    control.wrist_sideways_rot = mesh.skeleton.bones[1].rotation.x;
 	    control.wrist_updown_rot = mesh.skeleton.bones[1].rotation.z;
-	    
-            control.finger2c_rot = mesh.skeleton.bones[9].rotation.z;
-
-	    //
-	    control.finger1a_rot = mesh1.skeleton.bones[6].rotation.z;
-            control.finger1b_rot = mesh1.skeleton.bones[5].rotation.z;
-	    control.finger1c_rot = mesh1.skeleton.bones[4].rotation.z;
-            
-	    control.finger2a_rot = mesh1.skeleton.bones[9].rotation.z;
-            control.finger2b_rot = mesh1.skeleton.bones[10].rotation.z;
-	    control.finger2c_rot = mesh1.skeleton.bones[11].rotation.z;
-
-	    control.finger3a_rot = mesh1.skeleton.bones[14].rotation.z;
-            control.finger3b_rot = mesh1.skeleton.bones[15].rotation.z;
-	    control.finger3c_rot = mesh1.skeleton.bones[16].rotation.z;
-            
-	    control.finger4a_rot = mesh1.skeleton.bones[19].rotation.z;
-	    control.finger4b_rot = mesh1.skeleton.bones[20].rotation.z;
-            control.finger4c_rot = mesh1.skeleton.bones[21].rotation.z;
-
-	    control.wrist_sideways_rot = mesh1.skeleton.bones[1].rotation.x;
-	    control.wrist_updown_rot = mesh1.skeleton.bones[1].rotation.z;
-	    
-            control.finger2c_rot = mesh1.skeleton.bones[9].rotation.z;
 
 	    //helper
             helper = new THREE.SkeletonHelper(mesh);
@@ -151,11 +119,6 @@
 
             render()
         });
-	 /*wireframe
-	    var wireframeGeomtry = new THREE.WireframeGeometry( mesh.geometry );
-            var wireframeMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
-            var wireframe = new THREE.LineSegments( wireframeGeomtry, wireframeMaterial );
-            mesh.add(wireframe);*/
 
     }
 
@@ -212,30 +175,34 @@
 	mesh.skeleton.bones[1].rotation.x = control.wrist_sideways_rot;
 	mesh.skeleton.bones[1].rotation.z = control.wrist_updown_rot;
 
-	mesh1.skeleton.bones[6].rotation.z = control.finger1a_rot;
-        mesh1.skeleton.bones[5].rotation.z = control.finger1b_rot;
-        mesh1.skeleton.bones[4].rotation.z = control.finger1c_rot;
-
-        mesh1.skeleton.bones[9].rotation.z = control.finger2a_rot;
-	mesh1.skeleton.bones[10].rotation.z = control.finger2b_rot;
-        mesh1.skeleton.bones[11].rotation.z = control.finger2c_rot;
-
-        mesh1.skeleton.bones[14].rotation.z = control.finger3a_rot;
-	mesh1.skeleton.bones[15].rotation.z = control.finger3b_rot;
-        mesh1.skeleton.bones[16].rotation.z = control.finger3c_rot;
-
-        mesh1.skeleton.bones[19].rotation.z = control.finger4a_rot;
-	mesh1.skeleton.bones[20].rotation.z = control.finger4b_rot;
-        mesh1.skeleton.bones[21].rotation.z = control.finger4c_rot;
-
-	mesh1.skeleton.bones[1].rotation.x = control.wrist_sideways_rot;
-	mesh1.skeleton.bones[1].rotation.z = control.wrist_updown_rot;
         orbit.update();
     }
 
     // calls the init function when the window is done loading.
     window.onload = init;
 
-</script>
-<body>
+  </script>
+  <button id="Btn-AM">Change Material - 1</button>
+  <script>
+	var y = document.getElementById("Btn-AM");
+	y.addEventListener("click", function() {
+		scene.overrideMaterial = new THREE.MeshPhongMaterial({color: 0x000000, transparent:0.5, skinning: true});
+	});
+  </script>
+
+  <button id="Btn-AD">Change Material - 2</button>
+  <script>
+	var x = document.getElementById("Btn-AD");
+	x.addEventListener("click", function() {
+		scene.overrideMaterial = new THREE.MeshNormalMaterial({  skinning: true});
+		/*var textureLoader = new THREE.TextureLoader();
+		var texture = textureLoader.load( 'https://cywarr.github.io/small-shop/03db80b70ecfc07e84e6dd2589d0b14c57414fb8[1].jpeg' );
+		var materials = new THREE.MeshBasicMaterial( { map: texture } );
+		var Material = new THREE.MeshFaceMaterial( materials );
+		scene.overrideMaterial = new THREE.MeshPhongMaterial({Material,skinning: true});*/
+	});
+  </script>
+
+
 </body>
+</html>
