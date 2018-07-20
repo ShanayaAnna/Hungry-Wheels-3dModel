@@ -3,6 +3,8 @@ function RoundEdgedBox(w, h, d, r, wSegs, hSegs, dSegs, rSegs) {
    w = w || 1;
    h = h || 1;
    d = d || 1;
+
+
    let minimum = Math.min(Math.min(w, h), d);
    r = r || minimum * .25;
    r = r > minimum * .5 ? minimum * .5 : r;
@@ -23,7 +25,7 @@ function RoundEdgedBox(w, h, d, r, wSegs, hSegs, dSegs, rSegs) {
    bendedPlane(w, h, r, wSegs, hSegs, rSegs, d * .5, 'y', 0, 0);
    bendedPlane(w, h, r, wSegs, hSegs, rSegs, d * .5, 'y', Math.PI, 1);
    bendedPlane(d, h, r, dSegs, hSegs, rSegs, w * .5, 'y', Math.PI * .5, 2);
-   bendedPlane(d, h, r, dSegs, hSegs, rSegs, w * .5, 'y', Math.PI * -.5, 3);
+   bendedPlane(d, h, r, dSegs, hSegs, rSegs, w * .5, 'y', Math.PI * -0.5, 3);
    bendedPlane(w, d, r, wSegs, dSegs, rSegs, h * .5, 'x', Math.PI * -.5, 4);
    bendedPlane(w, d, r, wSegs, dSegs, rSegs, h * .5, 'x', Math.PI * .5, 5);
 
